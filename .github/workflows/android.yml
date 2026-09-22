@@ -19,7 +19,10 @@ jobs:
         with:
           gradle-version: '8.10.2'
       - name: Unit tests
-        run: gradle testDebugUnitTest --stacktrace --console=plain --warning-mode=all 2>&1 | tee build.log
+        run: gradle testDebugUnitTest --stacktrace --console=plain --warning-mode=all > build.log 2>&1
+      - name: Print compiler diagnostics
+        if: always()
+        run: grep -n -E "^e: |error:|Unresolved|Type mismatch|Cannot infer|None of the following" build.log || tail -120 build.log
       - name: Upload compiler log
         if: always()
         uses: actions/upload-artifact@v4
