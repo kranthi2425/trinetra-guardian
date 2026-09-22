@@ -22,7 +22,7 @@ object RiskEngine {
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.READ_CONTACTS, Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.CALL_PHONE, Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.MANAGE_EXTERNAL_STORAGE
+        "android.permission.MANAGE_EXTERNAL_STORAGE"
     )
     private val sideloadInstallers = setOf("", "null", "com.android.packageinstaller", "com.google.android.packageinstaller", "com.samsung.android.packageinstaller")
     private val systemLike = Regex("(?i)(system|update|sync|service|security|device|parental|monitor)")
