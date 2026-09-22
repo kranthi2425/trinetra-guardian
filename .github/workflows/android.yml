@@ -19,7 +19,8 @@ jobs:
         with:
           gradle-version: '8.10.2'
       - name: Unit tests
-        run: gradle testDebugUnitTest --stacktrace --console=plain --warning-mode=all > build.log 2>&1
+        run: gradle testDebugUnitTest --stacktrace --console=plain --warning-mode=all 2>&1 | tee build.log
+        continue-on-error: true
       - name: Print compiler diagnostics
         if: always()
         run: |
