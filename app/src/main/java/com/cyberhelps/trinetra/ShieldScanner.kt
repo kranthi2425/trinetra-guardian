@@ -23,7 +23,7 @@ class ShieldScanner(private val context: Context) {
         return installed.mapIndexed { index, info ->
             onProgress(index + 1, installed.size)
             val app = info.applicationInfo
-            val label = runCatching { pm.getApplicationLabel(app).toString() }.getOrDefault(info.packageName)
+            val label = if (app != null) runCatching { pm.getApplicationLabel(app).toString() }.getOrDefault(info.packageName) else info.packageName
             val installer = if (Build.VERSION.SDK_INT >= 30) runCatching { pm.getInstallSourceInfo(info.packageName).installingPackageName }.getOrNull()
                 else @Suppress("DEPRECATION") pm.getInstallerPackageName(info.packageName)
             RiskEngine.assess(label, info.packageName, installer, info.requestedPermissions?.toSet().orEmpty(), info.packageName in iocs)
