@@ -19,18 +19,7 @@ jobs:
         with:
           gradle-version: '8.10.2'
       - name: Unit tests
-        run: gradle testDebugUnitTest --stacktrace --console=plain --warning-mode=all 2>&1 | tee build.log
-        continue-on-error: true
-      - name: Print compiler diagnostics
-        if: always()
-        run: |
-          head -120 build.log
-      - name: Upload compiler log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: compiler-log
-          path: build.log
+        run: gradle testDebugUnitTest --stacktrace --console=plain
       - name: Build signed prototype APKs
         run: gradle assembleDebug assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
