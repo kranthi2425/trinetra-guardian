@@ -108,7 +108,7 @@ enum class Tab(val label: String) { HOME("Home"), SHIELD("APK Shield"), SOS("SOS
     var scanned by remember { mutableStateOf(false) }
     LazyColumn(Modifier.fillMaxSize().padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
         item { ScreenTitle("APK Shield", "On-device package and permission risk scan") }
-        item { Notice("Safety note", "A flag is a triage signal, not proof. Do not remove suspected monitoring software before making a safety and evidence plan.") }
+        item { Notice("Safety note", "A flag is a triage signal, not proof. Permission patterns can belong to legitimate parental-control, accessibility, antivirus, device-management or OEM apps. Do not remove suspected monitoring software before making a safety and evidence plan.") }
         item { Button(onClick = { scanning = true; scanned = false; scope.launch { results = withContext(Dispatchers.Default) { ShieldScanner(context).scan { a,b -> progress = a to b } }; scanning = false; scanned = true } }, enabled = !scanning, modifier = Modifier.fillMaxWidth().height(54.dp)) { Icon(Icons.Default.Radar, null); Spacer(Modifier.width(8.dp)); Text(if(scanning) "Scanning ${progress.first}/${progress.second}" else "Scan this device") } }
         if (scanning) item { LinearProgressIndicator(progress = { if(progress.second == 0) 0f else progress.first.toFloat()/progress.second }, Modifier.fillMaxWidth()) }
         if (scanned) item { val risky = results.count { it.level != RiskLevel.SAFE }; Text("${results.size} apps checked • $risky need review", color = Cyan, fontWeight = FontWeight.Bold) }
@@ -121,7 +121,7 @@ enum class Tab(val label: String) { HOME("Home"), SHIELD("APK Shield"), SOS("SOS
     val color = when(risk.level) { RiskLevel.SAFE -> Color(0xFF55D88A); RiskLevel.SUSPICIOUS -> Color(0xFFFFC857); RiskLevel.HIGH_RISK -> Color(0xFFFF7B54); RiskLevel.MALICIOUS -> Color(0xFFFF4D6D) }
     Surface(color = Card, shape = RoundedCornerShape(18.dp)) { Column(Modifier.padding(16.dp)) {
         Row { Column(Modifier.weight(1f)) { Text(risk.label, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis); Text(risk.packageName, color = Muted, fontSize = 11.sp) }; Surface(color = color.copy(.15f), shape = CircleShape) { Text(risk.level.label, color = color, fontWeight = FontWeight.Bold, fontSize = 10.sp, modifier = Modifier.padding(10.dp, 5.dp)) } }
-        if(risk.reasons.isNotEmpty()) { Spacer(Modifier.height(8.dp)); risk.reasons.forEach { Text("• $it", color = Muted, fontSize = 12.sp) } }
+        if(risk.reasons.isNotEmpty()) { Spacer(Modifier.height(8.dp)); risk.reasons.forEach { Text("• $it", color = Muted, fontSize = 12.sp) } }; risk.unavailableSignals.forEach { Text("• $it", color = Color(0xFFFFC857), fontSize = 12.sp) }; risk.limitations.distinct().forEach { Text("• $it", color = Muted, fontSize = 11.sp) }
     } }
 }
 
